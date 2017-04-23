@@ -762,5 +762,58 @@
 		
 		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
 		<script type="text/javascript" src="js/bootstrap.min.js" ></script>
+		<script type="text/javascript">
+			window.shareData = {
+					// 微信分享词       
+					"imgUrl": "http://mat1.gtimg.com/hn/cx/2017/04shizhou/weixin.jpg",
+					"tLink": 'http://hn.qq.com/zt2017/m/shizhou.htm',
+					"tTitle": "加油！我的城。",
+					"tContent": "每个人的故事，都以“我的城”为起点，终以“我的城”为归宿"
+				};
+				
+			// wxshare
+			 var onBridgeReady = function () {
+				var imgUrlArr = ['','teacher','moon','national','birthday','halloween','single','christmas', 'newyear','springfestival','valentine']; 
+				var appId = '';
+				var link, imgUrl, title, desc;
+				var default_share_msg = function(){
+					link = window.shareData.tLink;
+					imgUrl = window.shareData.imgUrl;
+					title = window.shareData.tTitle;
+					desc = window.shareData.tContent;
+				}
+				default_share_msg();
+				WeixinJSBridge.on('menu:share:appmessage', function(argv){
+					default_share_msg();
+					WeixinJSBridge.invoke('sendAppMessage',{
+						"appid" : appId,
+						"img_url" : imgUrl,
+						"img_width" : "640",
+						"img_height" : "640",
+						"link" : link,
+						"desc" : desc,
+						"title" : title
+						}, function(res) {})
+				});
+				WeixinJSBridge.on('menu:share:timeline', function(argv){
+					default_share_msg();
+					WeixinJSBridge.invoke('shareTimeline',{
+						"img_url" : imgUrl,
+						"img_width" : "640",
+						"img_height" : "640",
+						"link" : link,
+						"desc" : desc,
+						"title" : title + desc
+					}, function(res) {});
+				});
+			};
+			
+			if(document.addEventListener){
+				document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+			} else if(document.attachEvent){
+				document.attachEvent('WeixinJSBridgeReady' , onBridgeReady);
+				document.attachEvent('onWeixinJSBridgeReady' , onBridgeReady);
+			}	
+		</script>
 	</body>
 </html>
